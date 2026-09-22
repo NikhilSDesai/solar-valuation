@@ -1,6 +1,6 @@
 # Solar Asset Valuation Model
 
-Stochastic valuation model for solar infrastructure assets with live market data integration.
+Stochastic valuation model for solar infrastructure assets with live market data integration and Monte Carlo simulation.
 
 ## Overview
 
@@ -9,7 +9,9 @@ This project builds a Monte Carlo simulation framework for valuing solar energy 
 - **Live electricity prices** from UK National Grid ESO
 - **Solar irradiance data** from Open-Meteo
 - **Carbon prices** from EU ETS markets
-- **Stochastic cash flow modeling** with risk quantification
+- **Stochastic price models** (Ornstein-Uhlenbeck, GBM, Jump-Diffusion)
+- **Monte Carlo NPV simulation** with 10,000+ scenarios
+- **Risk metrics** (VaR, CVaR, sensitivity analysis)
 
 ## Project Structure
 
@@ -21,7 +23,11 @@ solar-valuation/
 │   ├── carbon_client.py    # EU ETS carbon prices
 │   ├── storage.py          # DuckDB storage layer
 │   └── pipeline.py         # Orchestration
-├── src/models/         # Valuation models (TODO)
+├── src/models/         # Valuation models
+│   ├── price_models.py     # OU, GBM, jump-diffusion processes
+│   ├── solar_asset.py      # Asset cash flow model
+│   ├── valuation.py        # Monte Carlo engine
+│   └── risk.py             # VaR, CVaR, sensitivity
 ├── notebooks/          # Analysis notebooks
 ├── config/             # Configuration
 └── data/               # Local data storage
@@ -56,10 +62,12 @@ python -m src.data.pipeline --stats
 - [x] Data ingestion pipeline
 - [x] DuckDB storage layer
 - [x] Live price feeds
-- [ ] Stochastic price models
-- [ ] Monte Carlo simulation engine
-- [ ] DCF valuation model
-- [ ] Risk metrics (VaR, CVaR)
+- [x] Stochastic price models (OU, GBM, Jump-Diffusion)
+- [x] Monte Carlo simulation engine
+- [x] DCF valuation model
+- [x] Risk metrics (VaR, CVaR)
+- [ ] Price model calibration from historical data
+- [ ] Bayesian parameter updating
 - [ ] Streamlit dashboard
 
 ## License
