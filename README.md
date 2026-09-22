@@ -42,11 +42,11 @@ python -m venv .venv && source .venv/bin/activate
 # Install dependencies
 pip install -e ".[dev,viz]"
 
-# Run data backfill (works without API keys)
-python -m src.data.pipeline --backfill
+# Run the dashboard
+streamlit run app.py
 
-# Check database stats
-python -m src.data.pipeline --stats
+# Or run data backfill (works without API keys)
+python -m src.data.pipeline --backfill
 ```
 
 ## Data Sources
@@ -66,9 +66,9 @@ python -m src.data.pipeline --stats
 - [x] Monte Carlo simulation engine
 - [x] DCF valuation model
 - [x] Risk metrics (VaR, CVaR)
-- [ ] Price model calibration from historical data
+- [x] Price model calibration from historical data
+- [x] Streamlit dashboard
 - [ ] Bayesian parameter updating
-- [ ] Streamlit dashboard
 
 ## License
 
