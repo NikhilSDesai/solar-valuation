@@ -1,6 +1,6 @@
 # Solar Asset Valuation
 
-Teaching myself more about data engineering, Monte Carlo Simulation and building apps on streamlit. Inspired by Sustainable Infrastructure work being done at Vallorii.
+Teaching myself more about data engineering, Monte Carlo Simulation and building apps on streamlit. Inspired by work being done at Vallorii.
 
 Monte Carlo simulation for solar PV project valuation.
 
