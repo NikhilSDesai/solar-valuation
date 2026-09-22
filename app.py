@@ -11,10 +11,10 @@ import plotly.io as pio
 from plotly.subplots import make_subplots
 import streamlit as st
 
-# Color scheme (from H3 hexagon design)
+# Color scheme
 COLORS = {
-    "bg": "#030222",
-    "bg_secondary": "#0a0a2e",
+    "bg": "#000000",
+    "bg_secondary": "#1a1a1a",
     "primary": "#34c9bd",
     "primary_dark": "#24b9ae",
     "accent": "#34c9bd",
@@ -30,14 +30,14 @@ PLOT_TEMPLATE = {
         "plot_bgcolor": COLORS["bg"],
         "font": {"color": COLORS["text"]},
         "xaxis": {
-            "gridcolor": "#1a1a3e",
-            "linecolor": "#1a1a3e",
-            "zerolinecolor": "#1a1a3e",
+            "gridcolor": "#2a2a2a",
+            "linecolor": "#2a2a2a",
+            "zerolinecolor": "#2a2a2a",
         },
         "yaxis": {
-            "gridcolor": "#1a1a3e",
-            "linecolor": "#1a1a3e",
-            "zerolinecolor": "#1a1a3e",
+            "gridcolor": "#2a2a2a",
+            "linecolor": "#2a2a2a",
+            "zerolinecolor": "#2a2a2a",
         },
         "colorway": [COLORS["primary"], COLORS["accent"], "#a78bfa", "#f472b6"],
     }
