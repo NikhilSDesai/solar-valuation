@@ -1,10 +1,12 @@
 # Solar Asset Valuation
 
+Teaching myself more about data engineering, Monte Carlo Simulation and building apps on streamlit. Inspired by Sustainable Infrastructure work being done at Vallorii.
+
 Monte Carlo simulation for solar PV project valuation.
 
 **[Live Demo](https://solar-valuation.streamlit.app/)**
 
-## Features
+## What this app does
 
 - Stochastic electricity price modeling (Ornstein-Uhlenbeck)
 - 10,000+ scenario NPV simulation
