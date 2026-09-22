@@ -28,7 +28,7 @@ PLOT_TEMPLATE = {
     "layout": {
         "paper_bgcolor": COLORS["bg"],
         "plot_bgcolor": COLORS["bg"],
-        "font": {"color": COLORS["text"]},
+        "font": {"family": "Libre Caslon Text, Georgia, serif", "color": COLORS["text"]},
         "xaxis": {
             "gridcolor": "#2a2a2a",
             "linecolor": "#2a2a2a",
@@ -61,6 +61,25 @@ st.set_page_config(
     page_icon=None,
     layout="wide",
 )
+
+# Custom font - Libre Caslon
+st.markdown("""
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap');
+
+html, body, [class*="css"] {
+    font-family: 'Libre Caslon Text', Georgia, serif;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Libre Caslon Text', Georgia, serif;
+}
+
+.stMarkdown, .stText, p, span, div {
+    font-family: 'Libre Caslon Text', Georgia, serif;
+}
+</style>
+""", unsafe_allow_html=True)
 
 st.title("Solar Asset Valuation")
 
