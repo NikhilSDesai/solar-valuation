@@ -3,6 +3,9 @@
 Run with: streamlit run app.py
 """
 
+import base64
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 import plotly.express as px
@@ -10,6 +13,17 @@ import plotly.graph_objects as go
 import plotly.io as pio
 from plotly.subplots import make_subplots
 import streamlit as st
+
+# Load background image as base64
+@st.cache_data
+def get_background_image():
+    img_path = Path(__file__).parent / "assets" / "background.jpg"
+    if img_path.exists():
+        with open(img_path, "rb") as f:
+            return base64.b64encode(f.read()).decode()
+    return None
+
+BG_IMAGE = get_background_image()
 
 # Color scheme
 COLORS = {
@@ -62,22 +76,42 @@ st.set_page_config(
     layout="wide",
 )
 
-# Custom font - Libre Caslon
-st.markdown("""
+# Custom styling with background image
+bg_css = ""
+if BG_IMAGE:
+    bg_css = f"""
+    .stApp {{
+        background-image:
+            linear-gradient(rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.9)),
+            url("data:image/jpeg;base64,{BG_IMAGE}");
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+    }}
+    """
+
+st.markdown(f"""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&display=swap');
 
-html, body, [class*="css"] {
-    font-family: 'Libre Caslon Text', Georgia, serif;
-}
+{bg_css}
 
-h1, h2, h3, h4, h5, h6 {
+html, body, [class*="css"] {{
     font-family: 'Libre Caslon Text', Georgia, serif;
-}
+}}
 
-.stMarkdown, .stText, p, span, div {
+h1, h2, h3, h4, h5, h6 {{
     font-family: 'Libre Caslon Text', Georgia, serif;
-}
+}}
+
+.stMarkdown, .stText, p, span, div {{
+    font-family: 'Libre Caslon Text', Georgia, serif;
+}}
+
+/* Make sidebar slightly transparent */
+[data-testid="stSidebar"] {{
+    background-color: rgba(26, 26, 26, 0.95);
+}}
 </style>
 """, unsafe_allow_html=True)
 
@@ -494,4 +528,8 @@ with tab4:
 
 # Footer
 st.divider()
-st.caption("Solar Valuation Model | Monte Carlo simulation with Ornstein-Uhlenbeck price dynamics")
+col1, col2 = st.columns(2)
+with col1:
+    st.caption("Solar Valuation Model | Monte Carlo simulation with Ornstein-Uhlenbeck price dynamics")
+with col2:
+    st.caption("Background photo by American Public Power Association", help="Unsplash")
