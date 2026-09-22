@@ -7,8 +7,41 @@ import numpy as np
 import pandas as pd
 import plotly.express as px
 import plotly.graph_objects as go
+import plotly.io as pio
 from plotly.subplots import make_subplots
 import streamlit as st
+
+# Color scheme (from H3 hexagon design)
+COLORS = {
+    "bg": "#030222",
+    "bg_secondary": "#0a0a2e",
+    "primary": "#34c9bd",
+    "primary_dark": "#24b9ae",
+    "accent": "#34c9bd",
+    "text": "#e0e0e0",
+    "negative": "#e85d75",
+    "positive": "#34c9bd",
+}
+
+# Custom Plotly template
+PLOT_TEMPLATE = {
+    "layout": {
+        "paper_bgcolor": COLORS["bg"],
+        "plot_bgcolor": COLORS["bg"],
+        "font": {"color": COLORS["text"]},
+        "xaxis": {
+            "gridcolor": "#1a1a3e",
+            "linecolor": "#1a1a3e",
+            "zerolinecolor": "#1a1a3e",
+        },
+        "yaxis": {
+            "gridcolor": "#1a1a3e",
+            "linecolor": "#1a1a3e",
+            "zerolinecolor": "#1a1a3e",
+        },
+        "colorway": [COLORS["primary"], COLORS["accent"], "#a78bfa", "#f472b6"],
+    }
+}
 
 from src.models import (
     SolarAsset,
@@ -199,17 +232,19 @@ with tab1:
         fig.add_trace(go.Histogram(
             x=result.npv_samples / 1e6,
             nbinsx=80,
-            marker_color='steelblue',
-            opacity=0.7,
+            marker_color=COLORS["primary"],
+            opacity=0.8,
             name='NPV Distribution',
         ))
 
         # Add vertical lines
-        fig.add_vline(x=result.npv_mean/1e6, line_dash="solid", line_color="red",
-                      annotation_text=f"Mean: £{result.npv_mean/1e6:.1f}M")
-        fig.add_vline(x=0, line_dash="dot", line_color="black")
-        fig.add_vline(x=result.var_95/1e6, line_dash="dash", line_color="orange",
-                      annotation_text=f"VaR 95%")
+        fig.add_vline(x=result.npv_mean/1e6, line_dash="solid", line_color="#a78bfa",
+                      annotation_text=f"Mean: £{result.npv_mean/1e6:.1f}M",
+                      annotation_font_color=COLORS["text"])
+        fig.add_vline(x=0, line_dash="dot", line_color=COLORS["text"])
+        fig.add_vline(x=result.var_95/1e6, line_dash="dash", line_color=COLORS["negative"],
+                      annotation_text=f"VaR 95%",
+                      annotation_font_color=COLORS["text"])
 
         fig.update_layout(
             title=f"NPV Distribution ({n_simulations:,} simulations)",
@@ -217,6 +252,7 @@ with tab1:
             yaxis_title="Frequency",
             showlegend=False,
             height=400,
+            **PLOT_TEMPLATE["layout"],
         )
 
         st.plotly_chart(fig, use_container_width=True)
@@ -254,8 +290,8 @@ with tab2:
                 x=list(range(1, project_life + 1)),
                 y=result.price_paths[i],
                 mode='lines',
-                line=dict(color='steelblue', width=0.5),
-                opacity=0.2,
+                line=dict(color=COLORS["primary_dark"], width=0.5),
+                opacity=0.25,
                 showlegend=False,
             ))
 
@@ -265,19 +301,21 @@ with tab2:
             x=list(range(1, project_life + 1)),
             y=mean_path,
             mode='lines',
-            line=dict(color='red', width=3),
+            line=dict(color="#a78bfa", width=3),
             name='Mean Path',
         ))
 
         # Long-term mean
-        fig.add_hline(y=theta, line_dash="dash", line_color="green",
-                      annotation_text=f"θ = £{theta}/MWh")
+        fig.add_hline(y=theta, line_dash="dash", line_color=COLORS["primary"],
+                      annotation_text=f"θ = £{theta}/MWh",
+                      annotation_font_color=COLORS["text"])
 
         fig.update_layout(
             title=f"Simulated Electricity Prices ({n_display} paths shown)",
             xaxis_title="Year",
             yaxis_title="Price (£/MWh)",
             height=450,
+            **PLOT_TEMPLATE["layout"],
         )
 
         st.plotly_chart(fig, use_container_width=True)
@@ -315,7 +353,7 @@ with tab3:
 
     fig = make_subplots(specs=[[{"secondary_y": True}]])
 
-    colors = ['steelblue' if npv > 0 else 'indianred' for npv in npvs]
+    colors = [COLORS["positive"] if npv > 0 else COLORS["negative"] for npv in npvs]
 
     fig.add_trace(
         go.Bar(x=names, y=npvs, name="NPV (£M)", marker_color=colors),
@@ -324,15 +362,16 @@ with tab3:
 
     fig.add_trace(
         go.Scatter(x=names, y=[p*100 for p in probs], name="P(Profitable) %",
-                   mode='markers+lines', marker=dict(size=12, color='orange')),
+                   mode='markers+lines', marker=dict(size=12, color="#a78bfa")),
         secondary_y=True,
     )
 
-    fig.add_hline(y=0, line_dash="dash", line_color="black", secondary_y=False)
+    fig.add_hline(y=0, line_dash="dash", line_color=COLORS["text"], secondary_y=False)
 
     fig.update_layout(
         title="Scenario Comparison",
         height=400,
+        **PLOT_TEMPLATE["layout"],
     )
     fig.update_yaxes(title_text="NPV (£ millions)", secondary_y=False)
     fig.update_yaxes(title_text="P(Profitable) %", secondary_y=True, range=[0, 105])
@@ -372,12 +411,21 @@ with tab4:
         years = np.arange(1, project_life + 1)
         generation = asset.generation_profile(project_life)
 
-        fig = px.area(
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(
             x=years,
             y=generation / 1000,
-            labels={"x": "Year", "y": "Generation (GWh)"},
+            fill='tozeroy',
+            fillcolor=f"rgba(52, 201, 189, 0.3)",
+            line=dict(color=COLORS["primary"], width=2),
+        ))
+        fig.update_layout(
+            height=300,
+            showlegend=False,
+            xaxis_title="Year",
+            yaxis_title="Generation (GWh)",
+            **PLOT_TEMPLATE["layout"],
         )
-        fig.update_layout(height=300, showlegend=False)
         st.plotly_chart(fig, use_container_width=True)
 
     st.subheader("Price Model Parameters")
