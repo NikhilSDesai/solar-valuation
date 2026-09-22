@@ -58,12 +58,47 @@ from src.models.risk import scenario_analysis
 # Page config
 st.set_page_config(
     page_title="Solar Valuation Model",
-    page_icon="☀️",
+    page_icon=None,
     layout="wide",
 )
 
-st.title("☀️ Solar Asset Valuation")
-st.markdown("Monte Carlo simulation for solar PV project valuation")
+st.title("Solar Asset Valuation")
+
+# Project description
+with st.expander("About this model", expanded=False):
+    st.markdown("""
+    ### What is this?
+
+    This tool estimates the **financial value** of a solar power project by simulating
+    thousands of possible future scenarios. Instead of relying on a single "best guess"
+    forecast, it shows you the full range of outcomes and their probabilities.
+
+    ### Why does this matter?
+
+    Solar projects are long-term investments (25+ years) with uncertain revenues.
+    Electricity prices fluctuate daily, weather varies year to year, and policies change.
+    Traditional valuations use fixed assumptions that hide this uncertainty. This model
+    makes it visible, helping investors and developers understand the real risks.
+
+    ### Key methods used
+
+    | Method | What it does |
+    |--------|--------------|
+    | **Ornstein-Uhlenbeck Process** | Models electricity prices as mean-reverting (prices tend to return to a long-term average, unlike stocks) |
+    | **Monte Carlo Simulation** | Runs 10,000+ random scenarios to build a probability distribution of outcomes |
+    | **Discounted Cash Flow (DCF)** | Calculates Net Present Value by discounting future cash flows to today's value |
+    | **Value at Risk (VaR)** | Measures downside risk: the worst-case loss at a given confidence level |
+    | **Robust Calibration** | Estimates model parameters from historical data while handling price spikes |
+
+    ### How to use it
+
+    1. Adjust the **asset parameters** in the sidebar (capacity, costs, project life)
+    2. Set **price assumptions** or calibrate from synthetic data
+    3. View the **NPV distribution** to understand expected value and uncertainty
+    4. Check **scenarios** to see how different market conditions affect value
+    """)
+
+st.caption("Monte Carlo simulation for solar PV project valuation")
 
 # Sidebar - Asset Parameters
 st.sidebar.header("Asset Parameters")
@@ -183,10 +218,10 @@ result, asset = run_valuation(
 
 # Main content - tabs
 tab1, tab2, tab3, tab4 = st.tabs([
-    "📊 Valuation Results",
-    "📈 Price Simulation",
-    "🎯 Sensitivity",
-    "📋 Asset Details",
+    "Valuation Results",
+    "Price Simulation",
+    "Scenario Analysis",
+    "Asset Details",
 ])
 
 with tab1:
