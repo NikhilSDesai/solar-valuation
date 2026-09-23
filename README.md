@@ -4,7 +4,7 @@ Teaching myself more about data engineering, Monte Carlo Simulation and building
 
 Monte Carlo simulation for solar PV project valuation.
 
-**[Live Demo](https://solar-valuation.streamlit.app/)**
+**[Streamlit App](https://solar-valuation.streamlit.app/)**
 
 ## What this app does
 
